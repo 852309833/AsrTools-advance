@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# Runtime / portable bundle
+runtime/
+cache/
+
+# Binaries
+*.exe
+*.dll
+*.pyd
+*.int
+
+# Local secrets
+.env
+whisper_config.local.json
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Logs / temp
+*.log
+*.tmp

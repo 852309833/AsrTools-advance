@@ -1,0 +1,9 @@
+{
+  "mode": "local",
+  "model": "base",
+  "python_path": "auto",
+  "cache_dir": "",
+  "api_base_url": "https://api.openai.com/v1",
+  "api_key": "",
+  "api_model": "whisper-1"
+}
