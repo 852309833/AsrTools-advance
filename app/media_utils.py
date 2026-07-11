@@ -79,6 +79,13 @@ def video2audio(input_file: str, output: str = "") -> bool:
     return False
 
 
+def build_export_path(source_path: str, export_format: str) -> str:
+    """在与源媒体文件相同的目录下生成导出文件路径。"""
+    source = Path(source_path).resolve()
+    ext = export_format.lower().lstrip('.')
+    return str(source.with_suffix(f'.{ext}'))
+
+
 def prepare_audio(file_path: str) -> tuple[str, bool]:
     """准备可供 ASR 引擎读取的音频文件，返回 (音频路径, 是否为临时文件)。"""
     source = Path(file_path)

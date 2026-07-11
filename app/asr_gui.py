@@ -23,7 +23,7 @@ from .bk_asr.BcutASR import BcutASR
 from .bk_asr.JianYingASR import JianYingASR
 from .bk_asr.KuaiShouASR import KuaiShouASR
 from .bk_asr.WhisperASR import WhisperASR
-from .media_utils import prepare_audio
+from .media_utils import prepare_audio, build_export_path
 
 ASR_ENGINES = {
     '必剪 (B站)': 'B 接口',
@@ -34,6 +34,7 @@ ASR_ENGINES = {
 
 DEFAULT_EXPORT_FORMAT = 'TXT'
 EXPORT_FORMATS = ['TXT', 'SRT', 'ASS']
+GITHUB_URL = 'https://github.com/852309833/AsrTools-advance'
 
 # 设置日志配置
 logging.basicConfig(
@@ -43,7 +44,7 @@ logging.basicConfig(
 
 
 class WorkerSignals(QObject):
-    finished = Signal(str, str)
+    finished = Signal(str, str, str)
     errno = Signal(str, str)
 
 
@@ -92,10 +93,11 @@ class ASRWorker(QRunnable):
                 result_text = result.to_txt()
                 
             logging.info(f"完成处理文件: {self.file_path} 使用引擎: {self.asr_engine}")
-            save_path = self.file_path.rsplit(".", 1)[0] + "." + save_ext
+            save_path = build_export_path(self.file_path, self.export_format)
             with open(save_path, "w", encoding="utf-8") as f:
                 f.write(result_text)
-            self.signals.finished.emit(self.file_path, result_text)
+            logging.info(f"导出文件已保存: {save_path}")
+            self.signals.finished.emit(self.file_path, result_text, save_path)
         except Exception as e:
             logging.error(f"处理文件 {self.file_path} 时出错: {str(e)}")
             self.signals.errno.emit(self.file_path, f"处理时出错: {str(e)}")
@@ -212,6 +214,7 @@ class ASRWidget(QWidget):
 
     def add_file_to_table(self, file_path):
         """将文件添加到表格中"""
+        file_path = os.path.abspath(file_path)
         if self.find_row_by_file_path(file_path) != -1:
             InfoBar.warning(
                 title='文件已存在',
@@ -356,7 +359,7 @@ class ASRWidget(QWidget):
             self.table.setItem(row, 1, status_item)
             self.update_start_button_state()
 
-    def update_table(self, file_path, result):
+    def update_table(self, file_path, result, save_path):
         """更新表格中文件的处理状态"""
         row = self.find_row_by_file_path(file_path)
         if row != -1:
@@ -366,7 +369,7 @@ class ASRWidget(QWidget):
 
             InfoBar.success(
                 title='处理完成',
-                content=f"文件 {self.table.item(row, 0).text()} 已处理完成",
+                content=f"已保存到源文件目录:\n{save_path}",
                 orient=Qt.Horizontal,
                 isClosable=True,
                 position=InfoBarPosition.TOP,
@@ -448,12 +451,12 @@ class InfoWidget(QWidget):
 
     def init_ui(self):
         # GitHub URL 和仓库描述
-        GITHUB_URL = "https://github.com/WEIFENG2333/AsrTools"
         REPO_DESCRIPTION = """
     🚀 无需复杂配置：无需 GPU 和繁琐的本地配置，小白也能轻松使用。
     🖥️ 高颜值界面：基于 PyQt5 和 qfluentwidgets，界面美观且用户友好。
     ⚡ 效率超人：多线程并发 + 批量处理，文字转换快如闪电。
     📄 多格式支持：默认导出 .txt 纯文本，也支持 .srt 和 .ass 字幕文件。
+    📁 就近保存：识别结果默认保存在源音频/视频文件所在目录。
         """
         
         main_layout = QVBoxLayout(self)
@@ -461,7 +464,7 @@ class InfoWidget(QWidget):
         # main_layout.setSpacing(50)
 
         # 标题
-        title_label = BodyLabel("  ASRTools", self)
+        title_label = BodyLabel("  AsrTools-advance", self)
         title_label.setFont(QFont("Segoe UI", 30, QFont.Bold))
         title_label.setAlignment(Qt.AlignCenter)
         main_layout.addWidget(title_label)
