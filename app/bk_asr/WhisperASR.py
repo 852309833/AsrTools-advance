@@ -72,6 +72,12 @@ def _find_whisper_python(config: dict) -> Optional[tuple[str, list[str]]]:
     if env_python:
         candidates.append((env_python, []))
 
+    # 便携版内置 runtime（优先）
+    runtime_python = _get_app_root() / 'runtime' / 'python.exe'
+    candidates.append((str(runtime_python), []))
+    # 当前解释器本身
+    candidates.append((sys.executable, []))
+
     candidates.extend([
         (r'E:\Python310\python.exe', []),
         (r'E:\Tools\Python312\python.exe', []),

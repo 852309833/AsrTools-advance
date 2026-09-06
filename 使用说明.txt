@@ -1,0 +1,17 @@
+﻿AsrTools-advance 便携版
+
+使用方法：
+1. 解压整个文件夹到任意位置（路径尽量不要太长）
+2. 双击 AsrTools.exe 运行
+3. 首次使用本地 Whisper 时会自动下载模型（需联网）
+
+已包含：
+- AsrTools.exe / AsrTools.int
+- ffmpeg.exe
+- runtime/（内置 Python 环境）
+- app/（程序源码）
+- app_icon.ico / app_icon.png
+
+未包含（体积过大）：
+- cache/ 里的临时音频与已下载模型（可自动重建）
+- .git

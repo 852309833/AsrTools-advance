@@ -10,6 +10,7 @@
 - 多线程并发处理
 - 导出格式：**TXT（默认）**、SRT、ASS
 - 内置 ffmpeg，可将视频自动转为音频后再识别
+- 仓库包含 Windows 便携运行包（`runtime/`、`AsrTools.exe`、`ffmpeg.exe`）及本地模型缓存
 
 ## 默认导出格式
 
@@ -28,8 +29,9 @@ AsrTools-advance/
 │   └── bk_asr/             # ASR 引擎实现
 ├── whisper_config.json     # Whisper 配置模板
 ├── ffmpeg.exe              # 音视频转换（Windows 便携版）
+├── AsrTools.exe            # Windows 便携版启动程序
 ├── runtime/                # 内置 Python 运行时（便携版）
-└── cache/                  # 运行时缓存（不应提交到 Git）
+└── cache/                  # Whisper 模型缓存
 ```
 
 ## 运行方式
@@ -83,7 +85,7 @@ pip install faster-whisper
 
 - 本项目基于开源项目 AsrTools 二次开发
 - 在线 ASR 接口依赖第三方服务，请自行评估可用性与合规性
-- `cache/`、`runtime/` 为本地运行产物，GitHub 仓库默认不上传
+- `cache/`、`runtime/` 已随仓库提供，便于 Windows 便携版直接运行
 
 ## License
 

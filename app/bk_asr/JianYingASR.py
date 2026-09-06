@@ -18,11 +18,21 @@ from .BaseASR import BaseASR
 
 class JianYingASR(BaseASR):
     def __init__(self, audio_path: Union[str, bytes], use_cache: bool = False, need_word_time_stamp: bool = False,
-                 start_time: float = 0, end_time: float = 6000):
+                 start_time: float = 0, end_time: float = None):
         super().__init__(audio_path, use_cache)
         self.audio_path = audio_path
-        self.end_time = end_time
         self.start_time = start_time
+        # end_time 单位为毫秒；默认按音频时长估算，避免长视频被截断到 6 秒
+        if end_time is None:
+            try:
+                from ..media_utils import probe_duration_ms
+                if isinstance(audio_path, str) and os.path.isfile(audio_path):
+                    end_time = probe_duration_ms(audio_path) + 5000
+                else:
+                    end_time = 12 * 3600 * 1000
+            except Exception:
+                end_time = 12 * 3600 * 1000
+        self.end_time = end_time
 
         # AWS credentials
         self.session_token = None

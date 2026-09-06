@@ -1,23 +1,12 @@
-# Python
+# Python bytecode / caches
 __pycache__/
 *.py[cod]
 *.pyo
-*.pyd
 .Python
 *.egg-info/
 .eggs/
 dist/
 build/
-
-# Runtime / portable bundle
-runtime/
-cache/
-
-# Binaries
-*.exe
-*.dll
-*.pyd
-*.int
 
 # Local secrets
 .env
